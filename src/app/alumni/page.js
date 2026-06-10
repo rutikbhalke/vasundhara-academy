@@ -4,10 +4,6 @@ import Link from 'next/link';
 import '@/styles/about.css';
 import '@/styles/phase5.css';
 
-export const metadata = {
-  title: 'Alumni Network | Vasundhara Academy Akole',
-  description: 'Connect with the Vasundhara Academy alumni network. Reconnect with old friends, share your success stories, and stay engaged with your alma mater.',
-};
 
 
 export default function AlumniPage() {

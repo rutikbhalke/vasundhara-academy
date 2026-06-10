@@ -4,10 +4,6 @@ import Link from 'next/link';
 import '@/styles/about.css';
 import '@/styles/phase5.css';
 
-export const metadata = {
-  title: 'Apply Online for Admission | Vasundhara Academy Akole',
-  description: 'Submit your admission application online for Vasundhara Academy. Fast, easy, and secure online admission process for the 2026-27 academic year.',
-};
 
 
 export default function ApplyPage() {

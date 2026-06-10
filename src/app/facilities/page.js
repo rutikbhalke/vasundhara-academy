@@ -4,10 +4,6 @@ import '@/styles/about.css';
 import '@/styles/phase4.css';
 import Lightbox from '@/components/ui/Lightbox';
 
-export const metadata = {
-  title: 'Modern School Facilities | Vasundhara Academy Akole',
-  description: 'Explore the modern infrastructure, smart classrooms, science labs, computer lab, library, and sports facilities at Vasundhara Academy in Akole.',
-};
 
 
 const facilities = [

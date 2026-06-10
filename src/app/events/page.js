@@ -4,10 +4,6 @@ import Link from 'next/link';
 import '@/styles/about.css';
 import '@/styles/phase4.css';
 
-export const metadata = {
-  title: 'School Events & News | Vasundhara Academy Akole',
-  description: 'Stay updated with the latest school events, celebrations, news, announcements, and activities at Vasundhara Academy.',
-};
 
 
 const defaultEvents = [

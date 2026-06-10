@@ -4,10 +4,6 @@ import Link from 'next/link';
 import '@/styles/about.css';
 import '@/styles/phase5.css';
 
-export const metadata = {
-  title: 'Comprehensive School Information | Vasundhara Academy',
-  description: 'Detailed information about Vasundhara Academy\'s school infrastructure, teaching staff, academic policies, and management details.',
-};
 
 
 const defaultInfoCards = [

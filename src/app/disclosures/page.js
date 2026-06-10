@@ -4,10 +4,6 @@ import Link from 'next/link';
 import '@/styles/about.css';
 import '@/styles/phase5.css';
 
-export const metadata = {
-  title: 'CBSE Mandatory Public Disclosure | Vasundhara Academy',
-  description: 'View the CBSE mandatory public disclosures, affiliation details, infrastructure details, and official school certificates of Vasundhara Academy, Akole.',
-};
 
 
 const defaultCategories = [

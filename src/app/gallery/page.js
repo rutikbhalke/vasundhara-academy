@@ -23,7 +23,7 @@ export default function GalleryPage() {
   const [lightboxData, setLightboxData] = useState(null);
 
   useEffect(() => {
-    fetch('/images/gallery/data.json')
+    fetch('/api/public/gallery')
       .then(r => r.json())
       .then(data => { setImages(data); setLoaded(true); })
       .catch(() => setLoaded(true));
