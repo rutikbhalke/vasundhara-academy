@@ -14,6 +14,7 @@ const categoryTabs = [
   { key: 'sports-fitness', label: 'Sports & Fitness', icon: 'fas fa-running' },
   { key: 'events-celebrations', label: 'Events & Celebrations', icon: 'fas fa-calendar-alt' },
   { key: 'achievements', label: 'Achievements', icon: 'fas fa-trophy' },
+  { key: 'vasundhara-teachers', label: 'Vasundhara Teachers', icon: 'fas fa-chalkboard-teacher' },
 ];
 
 export default function GalleryPage() {
