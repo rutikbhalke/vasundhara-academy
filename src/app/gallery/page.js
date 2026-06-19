@@ -16,6 +16,16 @@ const categoryTabs = [
   { key: 'achievements', label: 'Achievements', icon: 'fas fa-trophy' },
 ];
 
+const categoryAliases = {
+  campus: 'campus-facilities',
+  awards: 'achievements',
+  events: 'events-celebrations',
+  celebration: 'events-celebrations',
+  sports: 'sports-fitness',
+};
+
+const getGalleryCategory = (category = '') => categoryAliases[category] || category;
+
 export default function GalleryPage() {
   const [images, setImages] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -29,7 +39,7 @@ export default function GalleryPage() {
       .catch(() => setLoaded(true));
   }, []);
 
-  const filtered = activeTab === 'all' ? images : images.filter(i => (i.category || '') === activeTab);
+  const filtered = activeTab === 'all' ? images : images.filter(i => getGalleryCategory(i.category || '') === activeTab);
 
   const openLightbox = (idx) => {
     setLightboxData({
@@ -107,7 +117,7 @@ export default function GalleryPage() {
                 >
                   <img
                     src={img.url}
-                    alt={`Vasundhara Academy ${img.category.replace('-', ' ')}`}
+                    alt={`Vasundhara Academy ${getGalleryCategory(img.category || '').replace('-', ' ')}`}
                     loading="lazy"
                     style={{
                       width: '100%', height: '100%', objectFit: 'cover',
