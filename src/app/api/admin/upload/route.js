@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
 import { v2 as cloudinary } from 'cloudinary';
+import { createUploadFileName, writeUploadFile } from '@/lib/uploadStorage';
 
 // Configure Cloudinary if env vars are present
 if (process.env.CLOUDINARY_URL || process.env.CLOUDINARY_API_KEY) {
@@ -55,17 +54,12 @@ export async function POST(req) {
     }
 
     // 2. LOCAL UPLOAD (Development Fallback)
-    const name = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
-    
-    try { await mkdir(uploadDir, { recursive: true }); } catch (e) {}
-    
-    const path = join(uploadDir, name);
-    await writeFile(path, buffer);
+    const name = createUploadFileName(file.name);
+    const upload = await writeUploadFile(name, buffer);
 
     return NextResponse.json({
-      url: `/uploads/${name}`,
-      name: name,
+      url: upload.url,
+      name: upload.filename,
       size: file.size,
     });
   } catch (error) {

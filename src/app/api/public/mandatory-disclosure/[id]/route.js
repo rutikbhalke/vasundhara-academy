@@ -1,9 +1,8 @@
-import { readFile } from 'fs/promises';
-import { join, basename } from 'path';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { isLocalDevWithoutDatabase } from '@/lib/localDev';
 import { listLocalGalleryImages } from '@/lib/localGalleryStore';
+import { filenameFromUploadUrl, readUploadFile } from '@/lib/uploadStorage';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,8 +20,8 @@ function pdfResponse(buffer, filename = FALLBACK_PDF) {
 }
 
 async function fallbackPdfResponse() {
-  const filePath = join(process.cwd(), 'public', 'uploads', FALLBACK_PDF);
-  return pdfResponse(await readFile(filePath), FALLBACK_PDF);
+  const file = await readUploadFile(FALLBACK_PDF);
+  return pdfResponse(file.buffer, file.filename);
 }
 
 function normalizeCloudinaryPdfUrl(url) {
@@ -52,9 +51,9 @@ export async function GET(_req, { params }) {
 
   if (doc.url.startsWith('/uploads/')) {
     try {
-      const filename = basename(doc.url);
-      const filePath = join(process.cwd(), 'public', 'uploads', filename);
-      return pdfResponse(await readFile(filePath), filename);
+      const filename = filenameFromUploadUrl(doc.url);
+      const file = await readUploadFile(filename);
+      return pdfResponse(file.buffer, file.filename);
     } catch {
       return fallbackPdfResponse();
     }
