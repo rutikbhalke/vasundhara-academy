@@ -146,6 +146,7 @@ export default function AdminGallery() {
 
   const filtered = filterCategory === 'all' ? images : images.filter(i => i.category === filterCategory);
   const categories = [...new Set(images.map(i => i.category))];
+  const mandatoryDisclosureDownloadUrl = (id) => `/api/public/mandatory-disclosure/${encodeURIComponent(id)}`;
 
   return (
     <AdminLayout>
@@ -264,7 +265,7 @@ export default function AdminGallery() {
                     </div>
                   )}
                   {img.category === 'mandatory-disclosure' ? (
-                    <a href={img.url} target="_blank" rel="noopener noreferrer" style={{ width: '100%', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fef2f2', cursor: 'pointer', textDecoration: 'none' }}>
+                    <a href={mandatoryDisclosureDownloadUrl(img.id)} style={{ width: '100%', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fef2f2', cursor: 'pointer', textDecoration: 'none' }}>
                       <i className="fas fa-file-pdf" style={{ fontSize: '3rem', color: '#dc2626' }}></i>
                     </a>
                   ) : (

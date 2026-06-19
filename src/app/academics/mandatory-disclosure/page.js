@@ -68,7 +68,7 @@ export default function MandatoryDisclosurePage() {
                       <p>PDF document</p>
                     </div>
                   </div>
-                  <a href={doc.url} target="_blank" rel="noopener noreferrer" className="doc-download" download>
+                  <a href={`/api/public/mandatory-disclosure/${encodeURIComponent(doc.id)}`} className="doc-download">
                     <i className="fas fa-download" style={{ marginRight: '0.3rem' }}></i> Download
                   </a>
                 </div>

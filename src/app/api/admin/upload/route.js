@@ -23,6 +23,7 @@ export async function POST(req) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
 
     // 1. CLOUDINARY UPLOAD (Production)
     if (process.env.CLOUDINARY_URL || process.env.CLOUDINARY_API_KEY) {
@@ -30,7 +31,9 @@ export async function POST(req) {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: 'vasundhara-academy',
-            resource_type: 'auto',
+            resource_type: isPdf ? 'raw' : 'image',
+            use_filename: true,
+            unique_filename: true,
           },
           (error, result) => {
             if (error) {
@@ -41,7 +44,8 @@ export async function POST(req) {
                 url: result.secure_url,
                 id: result.public_id,
                 size: result.bytes,
-                format: result.format
+                format: result.format,
+                resourceType: result.resource_type,
               }));
             }
           }
