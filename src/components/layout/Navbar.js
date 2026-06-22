@@ -52,6 +52,7 @@ const navItems = [
       { label: 'Alumni', href: '/alumni' },
     ],
   },
+   { label: 'Public Disclosures', href: '/disclosures'},
   { label: 'Why Vasundhara', href: '/why-vasundhara' },
   { label: 'Contact', href: '/contact' },
 ];
