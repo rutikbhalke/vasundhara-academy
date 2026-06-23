@@ -77,10 +77,11 @@ export default function DisclosuresPage() {
         <div className="docs-grid">
           {defaultCategories.map((cat, i) => {
             const catDocs = uploadedDocs.filter(d => d.category === cat.key);
+            if (catDocs.length === 0) return null;
+
             return (
               <div key={i} className="docs-category">
                 <h3><i className={cat.icon}></i> {cat.title}</h3>
-                {/* Show uploaded docs from admin first */}
                 {catDocs.map(doc => (
                   <div key={doc.id} className="doc-item">
                     <div className="doc-info">
@@ -97,26 +98,6 @@ export default function DisclosuresPage() {
                     )}
                   </div>
                 ))}
-                {/* Show default placeholders for this category */}
-                {cat.defaultDocs.map((doc, j) => {
-                  // Skip if already uploaded
-                  const alreadyUploaded = catDocs.some(d => d.title.toLowerCase() === doc.title.toLowerCase());
-                  if (alreadyUploaded) return null;
-                  return (
-                    <div key={j} className="doc-item">
-                      <div className="doc-info">
-                        <div className="doc-icon"><i className="fas fa-file-alt"></i></div>
-                        <div>
-                          <h4>{doc.title}</h4>
-                          <p>{doc.desc}</p>
-                        </div>
-                      </div>
-                      <span className="doc-download" style={{ opacity: 0.6, fontSize: '0.7rem', color: 'var(--gray-400)' }}>
-                        <i className="fas fa-clock" style={{ marginRight: '0.3rem' }}></i> Upload Pending
-                      </span>
-                    </div>
-                  );
-                })}
               </div>
             );
           })}
