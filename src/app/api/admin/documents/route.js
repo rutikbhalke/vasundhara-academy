@@ -9,6 +9,28 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
+export async function POST(req) {
+  const auth = await checkAdminAuth();
+  if (auth) return auth;
+
+  const body = await req.json();
+  if (!body.title || !body.category || !body.fileUrl) {
+    return NextResponse.json({ error: 'Title, category, and file are required' }, { status: 400 });
+  }
+
+  const count = await prisma.document.count({ where: { category: body.category } });
+  const data = await prisma.document.create({
+    data: {
+      title: body.title,
+      category: body.category,
+      fileUrl: body.fileUrl,
+      order: count + 1,
+    },
+  });
+
+  return NextResponse.json(data);
+}
+
 export async function DELETE(req) {
   const auth = await checkAdminAuth();
   if (auth) return auth;
