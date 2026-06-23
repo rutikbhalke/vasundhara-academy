@@ -8,7 +8,7 @@ export default function MandatoryDisclosurePage() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    fetch('/api/public/documents')
+    fetch('/api/public/gallery?category=mandatory-disclosure')
       .then((res) => res.json())
       .then((data) => {
         setDocuments(Array.isArray(data) ? data : []);
@@ -65,10 +65,10 @@ export default function MandatoryDisclosurePage() {
                     <div className="doc-icon"><i className="fas fa-file-pdf" style={{ color: '#dc2626' }}></i></div>
                     <div>
                       <h4>{doc.title || 'Mandatory Disclosure'}</h4>
-                      <p>Disclosure document</p>
+                      <p>PDF document</p>
                     </div>
                   </div>
-                  <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="doc-download">
+                  <a href={`/api/public/mandatory-disclosure/${encodeURIComponent(doc.id)}`} className="doc-download">
                     <i className="fas fa-download" style={{ marginRight: '0.3rem' }}></i> Download
                   </a>
                 </div>
