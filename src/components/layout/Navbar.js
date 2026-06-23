@@ -27,6 +27,7 @@ const navItems = [
       { label: 'Academic Calendar', href: '/academics/calendar' },
       { label: 'Policies & Rules', href: '/academics/policies' },
       { label: 'Teacher Training', href: '/academics/teacher-training' },
+      { label: 'Mandatory Disclosure', href: '/academics/mandatory-disclosure' },
     ],
   },
   {

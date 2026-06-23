@@ -1,35 +1,27 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { isLocalDevWithoutDatabase } from '@/lib/localDev';
+import { listLocalGalleryImages } from '@/lib/localGalleryStore';
+import { EXCLUDED_FROM_PUBLIC_GALLERY, filterGalleryImages, getStaticGalleryImages, mergeGalleryImages } from '@/lib/staticGallery';
 
-// Categories excluded from the public gallery page
-// These images only appear on their dedicated pages
-const EXCLUDED_FROM_GALLERY = [
-  // Events page only
-  'events', 'sports', 'celebration', 'sports-day', 'annual-day',
-  // Staff page only (profile photos)
-  'faculty', 'staff', 'teacher',
-  // Facilities page only (each facility has its own section)
-  'classroom', 'science-lab', 'computer-lab', 'library',
-  'hostel', 'counseling', 'healthcare',
-  'sports-grounds', 'indoor-games', 'outings', 'assembly', 'transport',
-];
-
-// Gallery page shows ONLY: general, campus, achievements, awards
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get('category');
   const includeAll = searchParams.get('all') === 'true';
 
-  const where = {};
+  const staticImages = await getStaticGalleryImages();
 
-  if (category) {
-    // Specific category requested (e.g. facilities page asking for 'classroom')
-    where.category = category;
-  } else if (!includeAll) {
-    // Default gallery view: exclude events, faculty, and facility images
-    where.NOT = {
-      category: { in: EXCLUDED_FROM_GALLERY },
-    };
+  const where = {};
+  if (category) where.category = category;
+  else if (!includeAll) where.NOT = { category: { in: EXCLUDED_FROM_PUBLIC_GALLERY } };
+
+  if (isLocalDevWithoutDatabase()) {
+    const localImages = await listLocalGalleryImages({ includeAll: true });
+    return NextResponse.json(filterGalleryImages(mergeGalleryImages(localImages, staticImages), { category, includeAll }));
+  }
+
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json(filterGalleryImages(staticImages, { category, includeAll }));
   }
 
   const data = await prisma.galleryImage.findMany({
@@ -37,5 +29,5 @@ export async function GET(req) {
     orderBy: { createdAt: 'desc' },
   });
 
-  return NextResponse.json(data);
+  return NextResponse.json(filterGalleryImages(mergeGalleryImages(data, staticImages), { category, includeAll }));
 }

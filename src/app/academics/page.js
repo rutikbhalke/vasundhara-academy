@@ -102,6 +102,7 @@ export default function AcademicsPage() {
             <Link href="/academics/policies" className="btn btn-primary"><i className="fas fa-scroll"></i> Policies & Rules</Link>
             <Link href="/academics/teacher-training" className="btn btn-outline"><i className="fas fa-chalkboard"></i> Teacher Training</Link>
             <Link href="/academics/staff" className="btn btn-outline"><i className="fas fa-users"></i> Our Staff</Link>
+            <Link href="/academics/mandatory-disclosure" className="btn btn-outline"><i className="fas fa-file-pdf"></i> Mandatory Disclosure</Link>
           </div>
         </div>
       </section>
