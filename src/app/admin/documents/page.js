@@ -8,6 +8,8 @@ export default function AdminDocuments() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: '', category: 'affiliation' });
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch('/api/admin/documents').then(r => r.json()).then(data => {
@@ -18,30 +20,46 @@ export default function AdminDocuments() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) return;
+    setError('');
+
     const fileInput = e.target.querySelector('input[type=file]');
     const file = fileInput?.files?.[0];
 
-    let fileUrl = '';
-    if (file) {
+    if (!file) {
+      setError('Please choose a PDF or image before uploading.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
       const fd = new FormData();
       fd.append('file', file);
       const uploadRes = await fetch('/api/admin/upload', { method: 'POST', body: fd });
-      if (uploadRes.ok) {
-        const uploadData = await uploadRes.json();
-        fileUrl = uploadData.url;
+      const uploadData = await uploadRes.json().catch(() => ({}));
+      if (!uploadRes.ok || !uploadData.url) {
+        throw new Error(uploadData.error || 'File upload failed. Please try again.');
       }
-    }
 
-    const res = await fetch('/api/admin/documents', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, fileUrl }),
-    });
-    if (res.ok) {
-      const newDoc = await res.json();
-      setDocuments([...documents, newDoc]);
+      const res = await fetch('/api/admin/documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, fileUrl: uploadData.url }),
+      });
+      const responseData = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(responseData.error || 'Document could not be saved.');
+      }
+
+      setDocuments((items) => [responseData, ...items]);
       setForm({ title: '', category: 'affiliation' });
       setShowForm(false);
+      e.target.reset();
+    } catch (err) {
+      setError(err.message || 'Document upload failed.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -64,6 +82,11 @@ export default function AdminDocuments() {
         <div className="admin-card" style={{ marginBottom: '1.5rem' }}>
           <div className="admin-card-body">
             <form onSubmit={handleSubmit} className="admin-form">
+              {error && (
+                <div className="admin-login-error" style={{ textAlign: 'left' }}>
+                  <i className="fas fa-exclamation-circle"></i> {error}
+                </div>
+              )}
               <div className="admin-form-row">
                 <div className="form-group">
                   <label className="form-label">Document Title *</label>
@@ -81,9 +104,16 @@ export default function AdminDocuments() {
               </div>
               <div className="form-group">
                 <label className="form-label">Upload File (PDF/Image)</label>
-                <input className="form-input" type="file" accept=".pdf,.jpg,.png,.jpeg" />
+                <input className="form-input" type="file" accept=".pdf,.jpg,.png,.jpeg" required />
               </div>
-              <button type="submit" className="admin-btn admin-btn-primary"><i className="fas fa-save"></i> Upload Document</button>
+              <button
+                type="submit"
+                className="admin-btn admin-btn-primary"
+                disabled={submitting}
+                style={{ opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}
+              >
+                <i className={`fas fa-${submitting ? 'spinner fa-spin' : 'save'}`}></i> {submitting ? 'Uploading...' : 'Upload Document'}
+              </button>
             </form>
           </div>
         </div>
