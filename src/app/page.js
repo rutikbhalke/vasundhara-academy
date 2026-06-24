@@ -22,7 +22,7 @@ export default function HomePage() {
           <h1>
             <span className="hero-society">Abhinav Education Society&apos;s</span>
             <span className="hero-title">Vasundhara Academy (C.B.S.E School) Akole</span>
-            <span className="hero-tagline">|| विद्याधनं सर्वधनं प्रधानम् ||</span>
+            <span className="hero-tagline">|| सत्यमेव मृगेन्द्रता ||</span>
           </h1>
           <p className="hero-subtitle">
             Where tradition meets innovation — empowering young minds from Grade 1 to 10
